@@ -1,0 +1,84 @@
+#### General Configuration Parameters ####
+SAVE_SCHEDULE: range(0,100000001, 10000) # The iterations where training checkpoints are going to be saved
+NUMBER_OF_LOADING_WORKERS: 64   # Number of threads used in the data loader
+MAGICAL_SEED: 26957017
+FINISH_ON_VALIDATION_STALE: None # specify the dataset name here if using early stopping (better to let it train and monitor the loss on tensorboard)
+#### Input related parameters ####
+# A dictionary with all the sensors that are going to be used as input
+# this should match the train dataset
+SENSORS:
+  rgb: [3, 88, 200] # A RGB input sensor with three channels that is resized to 200x88
+MEASUREMENTS:
+  float_data: [31]  # Number of float data that must be read from the dataset
+BATCH_SIZE: 120
+NUMBER_ITERATIONS: 2000000
+TARGETS: ['steer', 'throttle', 'brake']  # From the float data, the ones that the network should estimate
+INPUTS: ['speed_module'] # From the float data, the ones that are input to the neural network
+NUMBER_FRAMES_FUSION: 1  # Number of frames fused
+NUMBER_IMAGES_SEQUENCE: 1  # Number of frames sent in sequence
+SEQUENCE_STRIDE: 1  # Number of frames skipped when reading the data
+AUGMENT_LATERAL_STEERINGS: 6  # Depending on this value there is a constant multiplying lateral steers
+SPEED_FACTOR: 12.0  # The constant that is divides the speed_module in order to make it from 0-1 (max speed = 40km/hr = 11.11m/s < 12)
+TRAIN_DATASET_NAME: 'AmazingTrainData'  # The name of the training dataset used. Must be inside COIL_DATASET_PATH folder
+AUGMENTATION: None  # The image augmentation applied on every input image (for other options check 'input/scheduler.py')
+DATA_USED: 'all'  # The part of the data to be used
+USE_NOISE_DATA: True  # If we use the noise data.
+NUMBER_OF_HOURS: 10  # Number of hours to be taken from the input data
+
+# DART related params
+# DART_COVMAT_DATA: '' # specify the data to be used for computing covariance matrix for DART. Must be inside COIL_DATASET_PATH folder
+# DART_MODEL_CHECKPOINT: '' # specify the model checkpoint to be used for computing the covariance matrix for DART (full path here)
+
+#### Testing Related Parameters ####
+# specify the model checkpoints for validation or testing here
+TEST_SCHEDULE: [10000, 20000, 30000, 40000, 50000, 60000, 70000, 80000, 90000, 100000, 110000, 120000, 130000, 140000, 150000, 160000, 170000, 180000, 190000, 200000, 210000, 220000, 230000, 240000, 250000, 260000, 270000, 280000, 290000, 300000, 310000, 320000, 330000, 340000, 350000, 360000, 370000, 380000, 390000, 400000, 410000, 420000, 430000, 440000, 450000, 460000, 470000, 480000, 490000, 500000, 510000, 520000, 530000, 540000, 550000, 560000, 570000, 580000, 590000, 600000, 610000, 620000, 630000, 640000, 650000, 660000, 670000, 680000, 690000, 700000, 710000, 720000, 730000, 740000, 750000, 760000, 770000, 780000, 790000, 800000, 810000, 820000, 830000, 840000, 850000, 860000, 870000, 880000, 890000, 900000, 910000, 920000, 930000, 940000, 950000, 960000, 970000, 980000, 990000, 1000000, 1010000, 1020000, 1030000, 1040000, 1050000, 1060000, 1070000, 1080000, 1090000, 1100000, 1110000, 1120000, 1130000, 1140000, 1150000, 1160000, 1170000, 1180000, 1190000, 1200000, 1210000, 1220000, 1230000, 1240000, 1250000, 1260000, 1270000, 1280000, 1290000, 1300000, 1310000, 1320000, 1330000, 1340000, 1350000, 1360000, 1370000, 1380000, 1390000, 1400000, 1410000, 1420000, 1430000, 1440000, 1450000, 1460000, 1470000, 1480000, 1490000, 1500000, 1510000, 1520000, 1530000, 1540000, 1550000, 1560000, 1570000, 1580000, 1590000, 1600000, 1610000, 1620000, 1630000, 1640000, 1650000, 1660000, 1670000, 1680000, 1690000, 1700000, 1710000, 1720000, 1730000, 1740000, 1750000, 1760000, 1770000, 1780000, 1790000, 1800000, 1810000, 1820000, 1830000, 1840000, 1850000, 1860000, 1870000, 1880000, 1890000, 1900000, 1910000, 1920000, 1930000, 1940000, 1950000, 1960000, 1970000, 1980000, 1990000, 2000000]
+
+#### Model Related Parameters ####
+# Network Parameters #
+MODEL_TYPE: 'coil-icra' # The type of model. Defines which modules the model has.
+MODEL_CONFIGURATION:  # Based on the MODEL_TYPE, we specify the structure
+  perception:  # The module that process the image input, it ouput the number of classes
+    res:
+      name: 'resnet34'
+      num_classes: 512
+
+  measurements:  # The module the process the input float data, in this case speed_input
+    fc:  # Easy to configure fully connected layer
+      neurons: [128, 128] # Each position add a new layer with the specified number of neurons
+      dropouts: [0.0, 0.0]
+  join:  # The module that joins both the measurements and the perception
+    fc:
+      neurons: [512]
+      dropouts: [0.0]
+  speed_branch:  # The prediction branch speed branch
+    fc:
+      neurons: [256, 256]
+      dropouts: [0.0, 0.5]
+  branches:  # The output branches for the different possible directions ( Straight, Left, Right, None)
+    number_of_branches: 4
+    fc:
+      neurons: [256, 256]
+      dropouts: [0.0, 0.5]
+PRE_TRAINED: True  # If the weights are started with imagenet.
+
+# Optimizer Parameters #
+# For now we use only use adam
+LEARNING_RATE: 0.0002  # First learning rate
+LEARNING_RATE_DECAY_INTERVAL: 75000 # Number of iterations where the learning rate is reduced
+LEARNING_RATE_THRESHOLD: 5000 # Number of iterations without going down to reduce learning rate
+LEARNING_RATE_DECAY_LEVEL: 0.1 # Th factor of reduction applied to the learning rate
+
+# Loss Parameters #
+BRANCH_LOSS_WEIGHT: [0.95, 0.95, 0.95, 0.95, 0.05] # how much each branch is weighted when computing loss
+LOSS_FUNCTION: 'L1' # The loss function used
+VARIABLE_WEIGHT: # how much each of the outputs specified on TARGETS are weighted for learning.
+  Steer: 0.5
+  Gas: 0.45
+  Brake: 0.05
+
+
+#### Simulation Related Parameters ####
+IMAGE_CUT: [90, 485]  # How you should cut the input image that is received from the server
+USE_ORACLE: False
+USE_FULL_ORACLE: False
+AVOID_STOPPING: False
