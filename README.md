@@ -1,9 +1,5 @@
 # Exploring Data Aggregation for Urban Driving
 
-<div style="text-align: center"><img src="img/teaser.pdf" width="256"/></div>
-
-![Image](img/teaser.pdf)
-
 This repository contains the code for the CVPR 2020 paper [Exploring Data Aggregation in Policy Learning for Vision-based Urban Autonomous Driving](http://www.cvlibs.net/publications/Prakash2020CVPR.pdf)
 
 If you find this code useful, please cite
