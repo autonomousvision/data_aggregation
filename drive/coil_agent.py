@@ -52,34 +52,10 @@ class CoILAgent(object):
         self._model.eval()
 
         # this entire segment is for loading models for ensemble evaluation - take care for the paths and checkpoints
-        # load the felipe model for ensemble evaluation
-        # self._model_felipe = CoILModel(g_conf.MODEL_TYPE, g_conf.MODEL_CONFIGURATION)
-        # checkpoint_felipe = torch.load('/is/sg2/aprakash/Projects/carla_autonomous_driving/code/coiltraine/_logs/S2_working_filtered_sgd/resnet34imnet10S1/checkpoints/420000.pth')
-        # self._model_felipe.load_state_dict(checkpoint_felipe['state_dict'])
-        # self._model_felipe.cuda()
-        # self._model_felipe.eval()
-        
-        # ensemble
         '''
         self.weights = [0.25, 0.25, 0.25, 0.25] # simple ensemble
-        # self.weights = [0.333, 0.333, 0.334]
-        # self.weights = [0.5, 0.5]
-        # self.weights = [0.42, 0.32, 0.17, 0.09] # swagger weights based on smile ensemble scheme
-        # self.weights = [0.17, 0.22, 0.27, 0.34]
-        # self.weights = [0.26, 0.33, 0.41]
-        # self.weights = [0.44, 0.56]
-        self.model_ids = ['660000', '670000', '1070000', '2640000']
-        # self.model_ids = ['660000', '670000', '1070000']
-        # self.model_ids = ['660000', '670000']
-        # self.model_ids = ['660000', '720000', '790000', '910000']
-        # self.model_ids = ['120000', '180000', '230000', '280000']
-        # self.model_ids = ['660000', '760000', '800000', '830000']
-        # self.model_ids = ['120000', '240000', '410000', '450000']
+        self.model_ids = ['660000', '670000', '1070000', '2640000'] # model checkpoints
         self.models_dir = '/is/sg2/aprakash/Projects/carla_autonomous_driving/code/coiltraine/_logs/ensemble'
-        # self.models_dir = '/is/sg2/aprakash/Projects/carla_autonomous_driving/code/coiltraine/_logs/smile_again'
-        # self.models_dir = '/is/sg2/aprakash/Projects/carla_autonomous_driving/code/coiltraine/_logs/smile_scratch_again'
-        # self.model_ids = ['670000', '1070000', '2640000']
-        # self.models_dir = '/is/rg/avg/aprakash/carla_logs/_logs/dagger'
         self._ensemble_model_list = []
         for i in range(len(self.model_ids)):
             curr_checkpoint = torch.load(self.models_dir+'/resnet34imnet10S1/checkpoints/'+self.model_ids[i]+'.pth')
