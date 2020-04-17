@@ -31,7 +31,7 @@ conda env create -f requirements.yaml
 ### Data Generation 
 It is recommended to use the [CARLA Gear](https://drive.google.com/file/d/1X52PXqT0phEi5WEWAISAQYZs-Ivx4VoE/view) version of CARLA 0.8.4 with [Docker](https://carla.readthedocs.io/en/latest/build_docker/) for data generation. For more information on this version, refer to the [CARLA data-collector](https://github.com/carla-simulator/data-collector) framework.
 
-#### Setting up CARLA Gear server
+#### Setting up CARLA Gear
 Download the CARLA Gear server from [this link](https://drive.google.com/file/d/1X52PXqT0phEi5WEWAISAQYZs-Ivx4VoE/view) and install [Docker](https://carla.readthedocs.io/en/latest/build_docker/).
 
 Clone the main CARLA repository
@@ -65,4 +65,19 @@ python3 multi_gpu_collection.py -ids <gpu_ids> -n <num_collectors> -g <collector
 The data is generated in [this format](https://github.com/carla-simulator/data-collector/blob/master/docs/dataset_format_description.md) at a resolution of 800x600. It is then processed to a resolution of 200x88 using ```tools/post_process.py```. The episode names follow the format ```episode_<num>``` and ```post_process.py``` operates on the episodes in the defined range between ```<start_episode_num>``` and ```<end_episode_num>```.
 ```
 python3 tools/post_process.py -pt <data_path> -e <start_episode_num> -t <end_episode_num> -ds -dd
+```
+
+#### Sampling Methods
+The on-policy data can be further sampled using the sampling mechanism defined in Section 3.3 of the paper.
+
+- For Task-based and Policy & Expert-based sampling, run ```tools/filter_dagger_data.py```. The settings for each of the sampling methods can be defined individually in the ```filter_dagger_data.py```.
+```
+python3 tools/filter_dagger_data.py <source_dir> <target_dir> <start_episode_num> <end_episode_num>
+```
+
+- For Policy-based sampling using uncertainty estimate, first save the prefinal layer activations using ```coil_core/save_activations.py```, then compute the variance due to multiple runs with test-time dropout using ```coil_core/run_entropy.py``` and finally sample the on-policy data using ```tools/filter_dagger_data_var.py```. Refer to ```input/coil_dataset.py``` regarding generation of the preload file.
+```
+python3 coil_core/save_activations.py --gpus <gpu_id> --dataset_name <preload_name_of_dataset> --config <path_to_yaml_config_file> --checkpoint <model_checkpoint> --save_path <path_to_save_activations>
+python3 coil_core/run_entropy.py  --gpus <gpu_id> --dataset_name <preload_name_of_dataset> --config <path_to_yaml_config_file> --checkpoint <model_checkpoint> --save_path <path_to_save_computed_variance>
+python3 tools/filter_dagger_data_var.py --source_dir <source_dir> --target_dir <target_dir> --preload <path_to_preload_file> --var_file <path_to_saved_variance>
 ```
