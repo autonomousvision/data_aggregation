@@ -26,6 +26,7 @@ import numpy as np
 
 parser = argparse.ArgumentParser()
 
+parser.add_argument('--gpus', type=str, required=True, help='gpu id')
 parser.add_argument('--dataset_path', type=str, required=True, help='path to carla dataset')
 parser.add_argument('--preload_name', type=str, required=True, help='preload file name')
 parser.add_argument('--config', type=str, required=True, help='configuration file')
@@ -36,6 +37,8 @@ parser.add_argument('--type', type=str, required=True, help='type of evaluation'
 args = parser.parse_args()
 
 merge_with_yaml(args.config)
+
+os.environ["CUDA_VISIBLE_DEVICES"] = args.gpus
 
 augmenter = Augmenter(None)
 dataset = CoILDataset(args.dataset_path, transform=augmenter, preload_name=args.preload_name)
