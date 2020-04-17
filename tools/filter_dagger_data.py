@@ -1,5 +1,5 @@
 """
-Script to sample critical states from the on-policy data (Sampling Methods - AE(brake), AE(all))
+Script to sample critical states from the on-policy data (Sampling Methods - AE(brake), AE(all)), Rank, IT (task-based)
 
 Usage: python filter_dagger_data.py <source_dir> <target_dir> <start_episode_num> <end_episode_num>
 """
@@ -51,10 +51,11 @@ def filter_data(episode, return_dict):
 			agent_brake = float(measurement_data['brake_noise'])
 			brake_change = abs(expert_brake - agent_brake)
 
-			# specify the sampling condition here - AE(brake) or AE(all)
+			# specify the sampling condition here - AE(brake) or AE(all) or Rank or IT (task-based)
+			# for task-based sampling, condition is measurement_data['directions'] == 3 or 4 or 5
 			# set the threshold for the first iteration based on the proportion of the data to be sampled
 			# in the first iteration, then keep the threshold fixed for subsequent iterations
-			if brake_change > 0.2:
+			if brake_change > 0.2: # set the sampling condition and threshold here as required, this is just an example
 				count += 1
 				
 				# copy the data to other directory
