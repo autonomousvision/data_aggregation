@@ -1,6 +1,6 @@
 """
-Script for policy-based sampling using uncertainity estimate.
-Uncertainity is measured by computing the variance in the predicted controls
+Script for policy-based sampling using uncertainty estimate.
+Uncertainty is measured by computing the variance in the predicted controls
 of 100 runs of model with test time dropout
 
 Requires:
