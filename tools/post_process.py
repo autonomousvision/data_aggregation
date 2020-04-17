@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Script to process the data from a resolution of 800x600 to 200x800
+Script to process the data from a resolution of 800x600 to 200x88
 """
 
 import json
