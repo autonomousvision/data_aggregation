@@ -543,6 +543,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_name', type=str, help='preload name of the required dataset')
     parser.add_argument('--checkpoint', type=str, required=True, help='model checkpoint to validate')
     parser.add_argument('--save_path', type=str, required=True, help='path to save activations')
+    parser.add_argument('--config', type=str, help='yaml config file')
 
     args = parser.parse_args()
     global agrs
@@ -551,4 +552,4 @@ if __name__ == '__main__':
     if not os.path.isdir(os.path.join(args.save_path, args.dataset_name)):
         os.mkdir(os.path.join(args.save_path, args.dataset_name))
 
-    execute(args.gpus, args.exp_batch, args.exp_alias, args.dataset_name)
+    execute(args.gpus, args.exp_batch, args.exp_alias, args.dataset_name, yaml_file=args.config)
