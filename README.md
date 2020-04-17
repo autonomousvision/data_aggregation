@@ -1,7 +1,7 @@
 ## Exploring Data Aggregation for Urban Driving
 This repository contains the code for the CVPR 2020 paper [Exploring Data Aggregation in Policy Learning for Vision-based Urban Autonomous Driving](http://www.cvlibs.net/publications/Prakash2020CVPR.pdf). It is built on top of the [COiLTRAiNE](https://github.com/felipecode/coiltraine) and [CARLA 0.8.4 data-collector](https://github.com/carla-simulator/data-collector) frameworks.
 
-If you find this code useful, please cite
+If you find this code useful, please cite:
 ```
   @inproceedings{Prakash2020CVPR,
         title = {Exploring Data Aggregation in Policy Learning for Vision-based Urban Autonomous Driving},
@@ -34,11 +34,11 @@ It is recommended to use the [CARLA Gear](https://drive.google.com/file/d/1X52PX
 #### Setting up CARLA Gear
 Download the CARLA Gear server from [this link](https://drive.google.com/file/d/1X52PXqT0phEi5WEWAISAQYZs-Ivx4VoE/view) and install [Docker](https://carla.readthedocs.io/en/latest/build_docker/).
 
-Clone the main CARLA repository
+Clone the main CARLA repository.
 ```
 git clone https://github.com/carla-simulator/carla.git <carla_folder>
 ```
-Build a docker image of the CARLA Gear server
+Build a docker image of the CARLA Gear server.
 ```
 docker image build -f <carla_folder>/Util/Docker/Release.Dockerfile -t carlagear <path-to-carlagear/>CarlaGear
 ```
@@ -46,17 +46,17 @@ docker image build -f <carla_folder>/Util/Docker/Release.Dockerfile -t carlagear
 #### Data Collection
 Once CARLA Gear is setup, data collection can be run using `multi_gpu_collection.py` with the config file stored in the path `dataset_configurations/<config_file>.py`. There are 3 modes for data generation - expert, dagger and dart. Refer to the config file for requirements for each mode. 
 
-- Off-policy data generation using expert policy
+- Off-policy data generation using expert policy:
 ```
 python3 multi_gpu_collection.py -ids <gpu_ids> -n <num_collectors> -g <collectors_per_gpu> -e <num_episodes_per_collector> -pt <data_path> -d <config_file> -ct carlagear -m expert
 ```
 
-- On-policy data generation using DAgger
+- On-policy data generation using DAgger:
 ```
 python3 multi_gpu_collection.py -ids <gpu_ids> -n <num_collectors> -g <collectors_per_gpu> -e <num_episodes_per_collector> -pt <data_path> -d <config_file> -ct carlagear -m dagger
 ```
 
-- Off-policy data generation with noise injection using [DART](https://arxiv.org/pdf/1703.09327.pdf)
+- Off-policy data generation with noise injection using [DART](https://arxiv.org/pdf/1703.09327.pdf):
 ```
 python3 multi_gpu_collection.py -ids <gpu_ids> -n <num_collectors> -g <collectors_per_gpu> -e <num_episodes_per_collector> -pt <data_path> -d <config_file> -ct carlagear -m dart
 ```
@@ -88,19 +88,19 @@ Once the data is generated, set the environment variable `COIL_DATASET_PATH` to 
 export COIL_DATASET_PATH = <path_to_data>
 ```
 
-For standalone training
+For standalone training:
 ```
 python3 coiltraine.py --gpus <gpu_id> --folder <exp_batch> --exp <exp_alias> --single-process train
 ```
 where `<exp_batch>` is the [experiment batch](https://github.com/felipecode/coiltraine/blob/master/docs/configuration.md) containing all the experiments to be trained or validated and `<exp_alias>` is the name of the config file containing details of the experiment (`configs/<exp_batch>/<exp_alias>.yaml`). For multi-gpu training, specify a string of gpu ids in `<gpu_ids>`.
 
-For standalone validation
+For standalone validation:
 ```
 python3 coiltraine.py --gpus <gpu_id> --folder <exp_batch> -vd <validation_dataset> --exp <exp_alias> --single-process validation --no-train
 ```
 where `<validation_dataset>` must be in `COIL_DATASET_PATH` and the model checkpoints to be validated are specified in `configs/<exp_batch>/<exp_alias>.yaml`.
 
-For joint training and validation
+For joint training and validation:
 ```
 python3 coiltraine.py --gpus <gpu_id> --folder <exp_batch> -vd <validation_dataset>
 ```
@@ -109,18 +109,18 @@ This results in a live terminal screen showing a running status of the on-going 
 ### Evaluation
 The model checkpoints to be evaluated are specified in `configs/<exp_batch>/<exp_alias>.yaml`. For a list of evaluation suites with different environmental conditions, see `drive/suites`.
 
-For standalone evaluation
+For standalone evaluation:
 ```
 python3 coiltraine.py --gpus <gpu_id> --folder <exp_batch> -de <evaluation_suite> --exp <exp_alias> --single-process drive --no-train --docker <docker_image>
 ```
 where `<evaluation_suite>` is generally one of `NocrashTraining_Town01`, `NocrashNewWeather_Town01`, `NocrashNewTown_Town02` and `NocrashNewWeatherTown_Town02`. For evaluating an ensemble of models, refer to `drive/coil_agent.py`
 
-For joint training, validation and evaluation
+For joint training, validation and evaluation:
 ```
 python3 coiltraine.py --gpus <gpu_id> --folder <exp_batch> -vd <validation_dataset> -de <evaluation_suite> --docker <docker_image>
 ```
 
-For generating GradCAM attention maps
+For generating GradCAM attention maps:
 ```
 python3 coil_core/grad_cam.py --gpus <gpu_id> --dataset_path <path_to_data> --preload_name <npy_preload_file> --config <path_to_yaml_config_file> --checkpoint <model_checkpoint> --gradcam_path <path_to_save_gradcam_maps> --type <dir_name_to_save_gradcam_maps>
 ```
