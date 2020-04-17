@@ -293,9 +293,6 @@ def execute(gpu, exp_batch, exp_alias, dataset_name, suppress_output=True, yaml_
     accumulated_error = 0
     iteration_on_checkpoint = 0
 
-    # considering steer, throttle & brake so 3x3 matrix
-    normalized_covariate_shift = torch.zeros(3,3)
-
     print ('data_loader size: ', len(data_loader))
     total_var = []
     for data in data_loader:
@@ -319,7 +316,7 @@ def execute(gpu, exp_batch, exp_alias, dataset_name, suppress_output=True, yaml_
     total_var = np.array(total_var)
     print (len(total_var), total_var.shape)
 
-    # save the computed variance array, this would be used for uncertainity based sampling in 'tools/filter_dagger_data_var.py'
+    # save the computed variance array, this would be used for uncertainty based sampling in 'tools/filter_dagger_data_var.py'
     np.save(os.path.join(args.save_path, args.dataset_name, 'computed_var.npy'), total_var)
     
 
@@ -333,8 +330,9 @@ if __name__ == '__main__':
     parser.add_argument('--dataset_name', type=str, help='preload name of the required dataset')
     parser.add_argument('--checkpoint', type=str, required=True, help='model checkpoint to validate')
     parser.add_argument('--save_path', type=str, required=True, help='path to save computed variances')
+    parser.add_argument('--config', type=str, help='yaml config file')
 
     args = parser.parse_args()
     
 
-    execute(args.gpus, args.exp_batch, args.exp_alias, args.dataset_name)
+    execute(args.gpus, args.exp_batch, args.exp_alias, args.dataset_name, yaml_file=args.config)
