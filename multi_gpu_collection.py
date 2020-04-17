@@ -84,7 +84,7 @@ if __name__ == '__main__':
     argparser.add_argument('-e', '--number_episodes', default=200, type=int, help='number of episodes per collector used')
     argparser.add_argument('-g', '--carlas_per_gpu', default=3, type=int, help='number of gpus per carla')
     argparser.add_argument('-s', '--start_episode', default=0, type=int, help='first episode number')
-    argparser.add_argument('-d', '--data_configuration_name', default='coil_training_dataset', type=str, help='config file')
+    argparser.add_argument('-d', '--data_configuration_name', default='coil_training_dataset', type=str, help='config file in dataset_configurations')
     argparser.add_argument('-pt', '--data_path', type=str, required=True, help='path used to save the data')
     argparser.add_argument('-ct', '--container_name', default='carlagear', type=str, help='docker container used to collect data')
     argparser.add_argument('-t', '--town_name', default=1, type=int, help='town name (1/2)')
