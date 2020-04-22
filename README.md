@@ -82,7 +82,7 @@ python3 coil_core/run_entropy.py  --gpus <gpu_id> --dataset_name <preload_name_o
 python3 tools/filter_dagger_data_var.py --source_dir <source_dir> --target_dir <target_dir> --preload <path_to_preload_file> --var_file <path_to_saved_variance>
 ```
 
-### Training and Validation
+### Training
 Once the data is generated, set the environment variable `COIL_DATASET_PATH` to the location containing the training and validation datasets.
 ```
 export COIL_DATASET_PATH = <path_to_data>
