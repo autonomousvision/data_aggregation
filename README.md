@@ -109,7 +109,7 @@ This results in a live terminal screen showing a running status of the on-going 
 ### Evaluation
 The model checkpoints to be evaluated are specified in `configs/<exp_batch>/<exp_alias>.yaml`. For a list of evaluation suites with different environmental conditions, see `drive/suites`.
 
-Pretrained models:
+Pretrained models:  
 We have provided pretrained models for CILRS+ and 3 iterations of DAgger+, DART and DA-RB+ (Table 1 and Fig. 2 of the main paper). To download the pretrained models, run:
 ```
 wget https://s3.eu-central-1.amazonaws.com/avg-projects/data_aggregation/models.zip
