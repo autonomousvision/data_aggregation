@@ -124,7 +124,7 @@ def get_causes_of_end(summary_file):
     header_summary = f.readline()
 
     header_summary = header_summary.split(',')
-    header_summary[-1] = header_summary[-1][:-2]
+    # header_summary[-1] = header_summary[-1][:-2]
     f.close()
 
     summary_matrix = np.loadtxt(open(summary_file, "rb"), delimiter=",", skiprows=1)
@@ -136,6 +136,7 @@ def get_causes_of_end(summary_file):
 
     # print ("end peds ", end_pedestrian)
     # print ("success ", success)
+
     all_ends = np.concatenate((np.expand_dims(success, axis=1),
                                np.expand_dims(end_pedestrian, axis=1),
                                np.expand_dims(end_vehicle, axis=1),
